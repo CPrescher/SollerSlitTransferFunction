@@ -9,37 +9,19 @@ import matplotlib.pyplot as plt
 from util import *
 from parameters import r1, r2, w1, w2, b1, b2, example_thickness
 
-two_theta_array = np.linspace(2, 50, 500) / 180. * np.pi
+two_theta_array = np.linspace(1, 40, 500) / 180. * np.pi
 p_x = np.linspace(-0.2, 0.2, 500)
 p_y = np.zeros(p_x.shape)
 p = np.array([p_x, p_y])
 phi_array = []
 for two_theta in two_theta_array:
     # calculate fix points for the ther outer parts of the slits
-    q1_1 = np.array([(r1 + b1) * np.cos(two_theta) - 0.5 * w1 * np.sin(two_theta),
-                     (r1 + b1) * np.sin(two_theta) + 0.5 * w1 * np.cos(two_theta)])
-
-    q1_2 = np.array([(r1 + b1) * np.cos(two_theta) + 0.5 * w1 * np.sin(two_theta),
-                     (r1 + b1) * np.sin(two_theta) - 0.5 * w1 * np.cos(two_theta)])
-
-    q2_1 = np.array([(r2 + b2) * np.cos(two_theta) - 0.5 * w2 * np.sin(two_theta),
-                     (r2 + b2) * np.sin(two_theta) + 0.5 * w2 * np.cos(two_theta)])
-
-    q2_2 = np.array([(r2 + b2) * np.cos(two_theta) + 0.5 * w2 * np.sin(two_theta),
-                     (r2 + b2) * np.sin(two_theta) - 0.5 * w2 * np.cos(two_theta)])
+    q1_1, q1_2 = calculate_rectangular_side_points(r1+b1, two_theta, w1)
+    q2_1, q2_2 = calculate_rectangular_side_points(r2+b2, two_theta, w2)
 
     # calculate fix points for the inner parts of the slits
-    s1_1 = np.array([r1 * np.cos(two_theta) - 0.5 * w1 * np.sin(two_theta),
-                     r1 * np.sin(two_theta) + 0.5 * w1 * np.cos(two_theta)])
-
-    s1_2 = np.array([r1 * np.cos(two_theta) + 0.5 * w1 * np.sin(two_theta),
-                     r1 * np.sin(two_theta) - 0.5 * w1 * np.cos(two_theta)])
-
-    s2_1 = np.array([r2 * np.cos(two_theta) - 0.5 * w2 * np.sin(two_theta),
-                     r2 * np.sin(two_theta) + 0.5 * w2 * np.cos(two_theta)])
-
-    s2_2 = np.array([r2 * np.cos(two_theta) + 0.5 * w2 * np.sin(two_theta),
-                     r2 * np.sin(two_theta) - 0.5 * w2 * np.cos(two_theta)])
+    s1_1, s1_2 = calculate_rectangular_side_points(r1, two_theta, w1)
+    s2_1, s2_2 = calculate_rectangular_side_points(r2, two_theta, w2)
 
     # calculate the angles to the outer points of the slits
     phi1 = calculate_angles(q1_1, q1_2, p)
@@ -107,7 +89,7 @@ gs = gridspec.GridSpec(1, 2, width_ratios=[2, 1])
 ax1 = plt.subplot(gs[0])
 plt.title("Dispersion angle through two slits")
 plt.contourf(X, Y, phi_array, 200, fontsize=14, cmap=plt.cm.get_cmap("jet"))
-con = plt.contour(X, Y, phi_array, 8, colors='k')
+con = plt.contour(X, Y, phi_array, 6, colors='k')
 plt.clabel(con, fmt='%3.1e', colors='k', fontsize=12)
 plt.xlabel("$2\\theta$ $(\degree)$", fontsize=14)
 plt.ylabel("x $(mm)$", fontsize=14)

@@ -29,3 +29,16 @@ def calculate_y_axis_intercept(p1, p2):
     """
     m = (p2[1]-p1[1])/(p2[0]-p1[0])
     return m*(-p2[0])+p2[1]
+
+def calculate_rectangular_side_points(radius, angle, width):
+    """
+    calculates the points which are rectangularly width/2 away at a certain angle, radius combination
+    :return: 2 points with (x, y) coordinates
+    """
+    p1 = np.array([radius * np.cos(angle) - 0.5 * width * np.sin(angle),
+                   radius * np.sin(angle) + 0.5 * width * np.cos(angle)])
+
+    p2 = np.array([radius * np.cos(angle) + 0.5 * width * np.sin(angle),
+                   radius * np.sin(angle) - 0.5 * width * np.cos(angle)])
+
+    return p1, p2
