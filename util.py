@@ -19,9 +19,9 @@ def calculate_x_axis_intercept(p1, p2):
     """
     obtains the x-axis intercept of a line defined by two points.
     """
-    m = p2 - p1
-    l = -p2[1]/m[1]
-    return l*m[0]+p2[0]
+    m = (p2[1]-p1[1])/(p2[0]-p1[0])
+    c = p2[1]-p2[0]*m
+    return -c/m
 
 def calculate_y_axis_intercept(p1, p2):
     """
