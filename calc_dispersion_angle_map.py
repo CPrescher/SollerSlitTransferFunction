@@ -38,16 +38,17 @@ for two_theta in two_theta_array:
     # correcting for positive side:
     intercept_s1_2_q1_1 = calculate_x_axis_intercept(s1_2, q1_1)
     intercept_s1_2_q1_2 = calculate_x_axis_intercept(s1_2, q1_2)
+    intercept_s1_2_q2_1 = calculate_x_axis_intercept(s1_2, q2_1)
+    intercept_q1_2_q2_2 = calculate_x_axis_intercept(q1_2, q2_2)
 
-    intermediate_region_ind = np.logical_and(p_x > intercept_s1_2_q1_2, p_x < intercept_s1_2_q1_1)
-    points_in_intermediate_region = np.array([p[0][intermediate_region_ind], p[1][intermediate_region_ind]])
+    intermediate_region_ind = np.logical_and(p_x > 0, p_x < intercept_s1_2_q1_1)
+    intermediate_region_ind = np.logical_and(intermediate_region_ind, p_x > intercept_q1_2_q2_2)
+    points_in_intermediate_region = p[:, intermediate_region_ind]
 
     if np.sum(intermediate_region_ind):
-        phi1 = calculate_angles(s1_2, q1_1, points_in_intermediate_region)
-        phi2 = calculate_angles(s1_2, q2_1, points_in_intermediate_region)
-        phi3 = calculate_angles(s2_2, q2_1, points_in_intermediate_region)
+        phi1 = calculate_angles(s1_2, q2_1, points_in_intermediate_region)
+        phi2 = calculate_angles(s2_2, q2_1, points_in_intermediate_region)
         phi[intermediate_region_ind] = np.where(phi1 < phi2, phi1, phi2)
-        phi[intermediate_region_ind] = np.where(phi[intermediate_region_ind] < phi3, phi[intermediate_region_ind], phi3)
 
     # cut the angle
     intercept_s1_2_q1_1 = calculate_x_axis_intercept(s1_2, q1_1)
@@ -60,20 +61,17 @@ for two_theta in two_theta_array:
     # correcting for negative side:
     intercept_s1_1_q1_2 = calculate_x_axis_intercept(s1_1, q1_2)
     intercept_s1_1_q1_1 = calculate_x_axis_intercept(s1_1, q1_1)
+    intercept_s1_1_q2_2 = calculate_x_axis_intercept(s1_1, q2_2)
+    intercept_q1_1_q2_1 = calculate_x_axis_intercept(q1_1, q2_1)
+    intercept_s2_1_q2_2 = calculate_x_axis_intercept(s2_1, q2_2)
 
-    intermediate_region_ind = np.logical_and(p_x < intercept_s1_1_q1_1, p_x > intercept_s1_1_q1_2)
-    points_in_intermediate_region = np.array([p[0][intermediate_region_ind], p[1][intermediate_region_ind]])
+    intermediate_region_ind = np.logical_and(p_x < 0, p_x > intercept_s1_1_q2_2)
+    points_in_intermediate_region = p[:, intermediate_region_ind]
 
     if np.sum(intermediate_region_ind):
-        phi1 = calculate_angles(s1_1, q1_2, points_in_intermediate_region)
-        phi2 = calculate_angles(s1_1, q2_2, points_in_intermediate_region)
-        phi3 = calculate_angles(s2_1, q2_2, points_in_intermediate_region)
+        phi1 = calculate_angles(s1_1, q2_2, points_in_intermediate_region)
+        phi2 = calculate_angles(q2_1, q2_2, points_in_intermediate_region)
         phi[intermediate_region_ind] = np.where(phi1 < phi2, phi1, phi2)
-        phi[intermediate_region_ind] = np.where(phi[intermediate_region_ind] < phi3, phi[intermediate_region_ind], phi3)
-
-    # cutting the angles
-    intercept_s1_1_q1_2 = calculate_x_axis_intercept(s1_1, q1_2)
-    phi[p[0] < intercept_s1_1_q1_2] = 0
 
     intercept_s1_1_q2_2 = calculate_x_axis_intercept(s1_1, q2_2)
     phi[p[0] < intercept_s1_1_q2_2] = 0
@@ -114,4 +112,5 @@ plt.plot(x, y, 'k--')
 plt.plot(x, -y, 'k--')
 
 plt.tight_layout()
+plt.savefig("dispersion_angle_two_slits.png", dpi=300)
 plt.show()
