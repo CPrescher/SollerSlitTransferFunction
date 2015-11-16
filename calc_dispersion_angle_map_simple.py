@@ -1,9 +1,20 @@
 # -*- coding: utf8 -*-
 __author__ = 'Clemens Prescher'
 
+
+
+
+############################################################################################################
+#### This script calculates the dispersion angle along a sample thickness for a multichannel collimator ####
+#### geometry defined in the parameters file. It is called simple because it approximates each slit
+#### with a point, thus, the slit length does not matter anymore.
+############################################################################################################
+
+import os
+os.environ['QT_GRAPHICSSYSTEM']='native'
 import matplotlib.gridspec as gridspec
 import matplotlib.pyplot as plt
-# plt.style.use('seaborn-whitegrid')
+plt.style.use('seaborn-whitegrid')
 
 
 from util import *
