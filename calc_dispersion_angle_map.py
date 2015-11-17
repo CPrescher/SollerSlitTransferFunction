@@ -147,9 +147,9 @@ def create_beautiful_plot(two_theta_array, distance_array, phi_array, example_th
     return figure, ax1, ax2, ax3, ax4
 
 
+if __name__ == '__main__':
+    from parameters import r1, r2, w1, w2, b1, b2, example_thickness
+    two_theta_array, distance_array, phi_array = calculate_dispersion_angle_matrix(r1, r2, w1, w2, b1, b2)
+    create_beautiful_plot(two_theta_array, distance_array, phi_array, example_thickness)
 
-from parameters import r1, r2, w1, w2, b1, b2, example_thickness
-two_theta_array, distance_array, phi_array = calculate_dispersion_angle_matrix(r1, r2, w1, w2, b1, b2)
-create_beautiful_plot(two_theta_array, distance_array, phi_array, example_thickness)
-
-plt.show()
+    plt.show()
