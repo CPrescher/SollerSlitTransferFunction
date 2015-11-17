@@ -144,9 +144,6 @@ def create_beautiful_plot(two_theta_array, distance_array, phi_array, example_th
              verticalalignment='center', transform = ax4.transAxes)
 
     plt.tight_layout()
-    plt.savefig("dispersion_angle_two_slits.png", dpi=300)
-
-
     return figure, ax1, ax2, ax3, ax4
 
 

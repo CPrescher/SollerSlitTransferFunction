@@ -95,5 +95,4 @@ plt.plot(x, y, 'k--')
 plt.plot(x, -y, 'k--')
 
 plt.tight_layout()
-plt.savefig("dispersion_angle_two_slits_simple.png", dpi=300)
 plt.show()
