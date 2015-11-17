@@ -3,7 +3,7 @@ __author__ = 'Clemens Prescher'
 
 import matplotlib.gridspec as gridspec
 import matplotlib.pyplot as plt
-# plt.style.use('seaborn-whitegrid')
+plt.style.use('seaborn-whitegrid')
 
 
 from util import *
