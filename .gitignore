@@ -1,4 +1,8 @@
 .idea
+*.pyc
 .ipynb_checkpoints
 *.png
+.DS_Store
+._*
+parameters.py
 output
