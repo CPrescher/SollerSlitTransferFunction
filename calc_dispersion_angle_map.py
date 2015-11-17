@@ -5,6 +5,8 @@ import matplotlib.gridspec as gridspec
 import matplotlib.pyplot as plt
 plt.style.use('seaborn-whitegrid')
 
+import os
+os.environ['QT_GRAPHICSSYSTEM']='native'
 
 from util import *
 from parameters import r1, r2, w1, w2, b1, b2, example_thickness
@@ -34,38 +36,40 @@ for two_theta in two_theta_array:
     phi = np.where(phi3 < phi, phi3, phi)
     phi = np.where(phi4 < phi, phi4, phi)
 
-    #####################
-    # correcting for positive side:
+    # getting geometry
     intercept_s1_2_q1_1 = calculate_x_axis_intercept(s1_2, q1_1)
     intercept_s1_2_q1_2 = calculate_x_axis_intercept(s1_2, q1_2)
     intercept_s1_2_q2_1 = calculate_x_axis_intercept(s1_2, q2_1)
     intercept_q1_2_q2_2 = calculate_x_axis_intercept(q1_2, q2_2)
 
-    intermediate_region_ind = np.logical_and(p_x > 0, p_x < intercept_s1_2_q1_1)
-    intermediate_region_ind = np.logical_and(intermediate_region_ind, p_x > intercept_q1_2_q2_2)
-    points_in_intermediate_region = p[:, intermediate_region_ind]
-
-    if np.sum(intermediate_region_ind):
-        phi1 = calculate_angles(s1_2, q2_1, points_in_intermediate_region)
-        phi2 = calculate_angles(s2_2, q2_1, points_in_intermediate_region)
-        phi[intermediate_region_ind] = np.where(phi1 < phi2, phi1, phi2)
-
-    # cut the angle
-    intercept_s1_2_q1_1 = calculate_x_axis_intercept(s1_2, q1_1)
-    phi[p[0] > intercept_s1_2_q1_1] = 0
-
-    intercept_s1_2_q2_1 = calculate_x_axis_intercept(s1_2, q2_1)
-    phi[p[0] > intercept_s1_2_q2_1] = 0
-
-    ########################
-    # correcting for negative side:
     intercept_s1_1_q1_2 = calculate_x_axis_intercept(s1_1, q1_2)
     intercept_s1_1_q1_1 = calculate_x_axis_intercept(s1_1, q1_1)
     intercept_s1_1_q2_2 = calculate_x_axis_intercept(s1_1, q2_2)
     intercept_q1_1_q2_1 = calculate_x_axis_intercept(q1_1, q2_1)
     intercept_s2_1_q2_2 = calculate_x_axis_intercept(s2_1, q2_2)
 
-    intermediate_region_ind = np.logical_and(p_x < 0, p_x > intercept_s1_1_q2_2)
+    pos_cutoff = 0 if intercept_q1_2_q2_2 < 0 else intercept_q1_2_q2_2
+    neg_cutoff = 0 if intercept_q1_1_q2_1 > 0 else intercept_q1_1_q2_1
+
+    #####################
+    # correcting for positive side:
+
+    intermediate_region_ind = np.logical_and(p_x > pos_cutoff, p_x < intercept_s1_2_q1_1)
+    points_in_intermediate_region = p[:, intermediate_region_ind]
+
+    if np.sum(intermediate_region_ind):
+        phi1 = calculate_angles(s1_2, q2_1, points_in_intermediate_region)
+        phi2 = calculate_angles(q2_2, q2_1, points_in_intermediate_region)
+        phi[intermediate_region_ind] = np.where(phi1 < phi2, phi1, phi2)
+
+    # cut the angle
+    phi[p[0] > intercept_s1_2_q1_1] = 0
+    phi[p[0] > intercept_s1_2_q2_1] = 0
+
+    ########################
+    # correcting for negative side:
+
+    intermediate_region_ind = np.logical_and(p_x < neg_cutoff, p_x > intercept_s1_1_q2_2)
     points_in_intermediate_region = p[:, intermediate_region_ind]
 
     if np.sum(intermediate_region_ind):

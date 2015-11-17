@@ -10,6 +10,8 @@ __author__ = 'Clemens Prescher'
 #### with a point, thus, the slit length does not matter anymore.
 ############################################################################################################
 
+import os
+os.environ['QT_GRAPHICSSYSTEM']='native'
 
 import matplotlib.gridspec as gridspec
 import matplotlib.pyplot as plt
